@@ -162,7 +162,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](./LICEN
 
 **NamaeTachii**
 
-- GitHub: [@NamaeTachii](https://github.com/NamaeTachii)
+- GitHub: [@NamaeTheGhost](https://github.com/NamaeTheGhost)
 
 ---
 
