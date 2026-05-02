@@ -22,48 +22,40 @@ function Titlebar(): React.JSX.Element {
   }, [])
 
   return (
-    <div className="drag flex h-10 select-none items-stretch border-b-[3px] border-ink bg-bone font-mono text-[11px] uppercase tracking-[0.18em] text-ink">
-      {/* LEFT — Brand block */}
+    <div className="drag flex h-8 select-none items-stretch border-b border-ink/20 bg-bone font-mono text-[10px] uppercase tracking-[0.15em] text-ink">
+      {/* LEFT — Brand */}
       <div className="flex items-stretch">
-        <div className="flex h-full w-10 items-center justify-center bg-ink text-bone">
-          <span className="font-jp text-base font-black leading-none">名</span>
+        <div className="flex h-full w-8 items-center justify-center bg-ink text-bone">
+          <span className="font-jp text-sm font-semibold leading-none">赤</span>
         </div>
-        <div className="flex items-center gap-3 border-r-[3px] border-ink px-4">
-          <span className="font-bold tracking-[0.32em]">NAMAETYPE</span>
-          <span className="text-[10px] text-ink/50">/</span>
-          <span className="font-jp text-[12px] font-bold tracking-[0.2em]">ナマエタイプ</span>
+        <div className="flex items-center gap-2 border-r border-ink/20 px-3">
+          <span className="font-semibold tracking-[0.2em]">AKAI</span>
+          <span className="text-[9px] text-ink/30">·</span>
+          <span className="hidden text-[9px] text-ink/40 md:inline">v1.0.0</span>
         </div>
       </div>
 
-      {/* CENTER — Status strip */}
-      <div className="flex flex-1 items-center justify-center gap-6 px-4 text-ink/70">
-        <span className="hidden items-center gap-2 md:flex">
-          <span className="inline-block h-2 w-2 bg-vermillion" />
-          <span>SYS_OK</span>
-        </span>
-        <span className="hidden md:inline">v1.0.0</span>
-        <span className="hidden md:inline">·</span>
+      {/* CENTER — Clock */}
+      <div className="flex flex-1 items-center justify-center text-ink/50">
         <span className="hidden md:inline">{clock}</span>
       </div>
 
       {/* RIGHT — Window controls */}
-      <div className="no-drag flex items-stretch border-l-[3px] border-ink">
+      <div className="no-drag flex items-stretch border-l border-ink/20">
         <TitlebarButton
-          label="MIN"
           ariaLabel="Minimize"
           onClick={() => window.api.window.minimize()}
         >
-          <svg width="12" height="12" viewBox="0 0 12 12">
+          <svg width="10" height="10" viewBox="0 0 12 12">
             <rect x="1" y="6" width="10" height="2" fill="currentColor" />
           </svg>
         </TitlebarButton>
         <TitlebarButton
-          label={maximized ? 'RST' : 'MAX'}
           ariaLabel={maximized ? 'Restore' : 'Maximize'}
           onClick={() => window.api.window.toggleMaximize()}
         >
           {maximized ? (
-            <svg width="12" height="12" viewBox="0 0 12 12">
+            <svg width="10" height="10" viewBox="0 0 12 12">
               <rect
                 x="1"
                 y="3"
@@ -84,7 +76,7 @@ function Titlebar(): React.JSX.Element {
               />
             </svg>
           ) : (
-            <svg width="12" height="12" viewBox="0 0 12 12">
+            <svg width="10" height="10" viewBox="0 0 12 12">
               <rect
                 x="1"
                 y="1"
@@ -98,12 +90,11 @@ function Titlebar(): React.JSX.Element {
           )}
         </TitlebarButton>
         <TitlebarButton
-          label="EXT"
           ariaLabel="Close"
           danger
           onClick={() => window.api.window.close()}
         >
-          <svg width="12" height="12" viewBox="0 0 12 12">
+          <svg width="10" height="10" viewBox="0 0 12 12">
             <path
               d="M1 1 L11 11 M11 1 L1 11"
               stroke="currentColor"
@@ -118,31 +109,28 @@ function Titlebar(): React.JSX.Element {
 }
 
 function TitlebarButton({
-  label,
   ariaLabel,
   onClick,
   children,
   danger
 }: {
-  label: string
   ariaLabel: string
   onClick: () => void
   children: React.ReactNode
   danger?: boolean
 }): React.JSX.Element {
   const base =
-    'flex h-full w-14 items-center justify-center gap-1.5 border-r-[3px] border-ink last:border-r-0 transition-colors'
-  const tone = danger ? 'hover:bg-vermillion hover:text-bone' : 'hover:bg-ink hover:text-bone'
+    'flex h-full w-10 items-center justify-center transition-colors'
+  const tone = danger ? 'hover:bg-vermillion hover:text-bone' : 'hover:bg-ink/10'
 
   return (
     <button
       type="button"
       aria-label={ariaLabel}
       onClick={onClick}
-      className={`${base} ${tone} brutal-focus`}
+      className={`${base} ${tone}`}
     >
-      <span className="flex items-center justify-center">{children}</span>
-      <span className="hidden text-[9px] font-bold lg:inline">{label}</span>
+      {children}
     </button>
   )
 }

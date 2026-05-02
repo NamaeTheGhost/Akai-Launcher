@@ -33,9 +33,9 @@ function GameDetails(): React.JSX.Element | null {
         type="button"
         aria-label="Close details"
         onClick={() => selectGame(null)}
-        className="flex-1 cursor-default bg-ink/55"
+        className="flex-1 cursor-default bg-ink/30"
       />
-      <div className="w-full max-w-[640px] border-l-[3px] border-ink bg-bone shadow-[ -8px_0_0_0_rgba(10,10,10,0.18)]">
+      <div className="w-full max-w-[560px] border-l border-ink/20 bg-bone shadow-lg">
         <DetailsBody game={game} platform={platform} meta={meta} />
       </div>
     </div>
@@ -124,11 +124,11 @@ function DetailsBody({
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-stretch border-b-[3px] border-ink bg-ink text-bone">
-        <div className="flex items-center gap-3 px-4 py-2 font-mono text-[10px] font-bold tracking-[0.3em]">
-          <span className="inline-block h-2 w-2 bg-vermillion" />
+      <header className="flex items-stretch border-b border-ink/20 bg-ink text-bone">
+        <div className="flex items-center gap-2 px-3 py-1.5 font-mono text-[9px] font-semibold tracking-[0.2em]">
+          <span className="inline-block h-1.5 w-1.5 bg-vermillion" />
           <span>DETAILS</span>
-          <span className="font-jp tracking-[0.2em]">詳細</span>
+          <span className="font-jp tracking-[0.15em]">詳細</span>
         </div>
         <div className="ml-auto flex items-stretch">
           {customGame ? (
@@ -136,29 +136,25 @@ function DetailsBody({
               <button
                 type="button"
                 onClick={() => setEditOpen(true)}
-                className="brutal-focus flex items-center gap-2 border-l-[3px] border-bone px-4 py-2 font-mono text-[11px] font-bold tracking-[0.25em] transition-colors hover:bg-vermillion"
+                className="btn-ghost border-l border-bone/20"
               >
                 <span>EDIT</span>
-                <span className="font-jp text-[12px] tracking-normal">編</span>
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmDelete(true)}
-                className="brutal-focus flex items-center gap-2 border-l-[3px] border-bone px-4 py-2 font-mono text-[11px] font-bold tracking-[0.25em] transition-colors hover:bg-vermillion"
+                className="btn-danger border-l border-bone/20 rounded-none"
               >
                 <span>DELETE</span>
-                <span className="font-jp text-[12px] tracking-normal">削</span>
               </button>
             </>
           ) : null}
           <button
             type="button"
             onClick={() => selectGame(null)}
-            className="brutal-focus flex items-center gap-2 border-l-[3px] border-bone px-4 py-2 font-mono text-[11px] font-bold tracking-[0.25em] transition-colors hover:bg-vermillion"
+            className="btn-ghost border-l border-bone/20"
           >
-            <span>CLOSE</span>
-            <span className="font-jp text-[12px] tracking-normal">閉</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true">
               <path
                 d="M1 1 L11 11 M11 1 L1 11"
                 stroke="currentColor"
@@ -170,50 +166,35 @@ function DetailsBody({
         </div>
       </header>
 
-      <div className="grid grid-cols-12 border-b-[3px] border-ink">
-        <div className="col-span-4 border-r-[3px] border-ink bg-bone">
+      <div className="grid grid-cols-12 border-b border-ink/20">
+        <div className="col-span-4 border-r border-ink/20 bg-bone">
           <div className="relative flex aspect-[4/5] flex-col justify-end overflow-hidden">
-            <div className="absolute inset-0">
-              <div className="absolute inset-x-0 top-1/3 h-px bg-ink/15" />
-              <div className="absolute inset-x-0 top-2/3 h-px bg-ink/15" />
-              <div className="absolute inset-y-0 left-1/3 w-px bg-ink/15" />
-              <div className="absolute inset-y-0 left-2/3 w-px bg-ink/15" />
-            </div>
-            <span className="font-jp-serif absolute -bottom-6 left-2 text-[220px] font-black leading-none text-ink">
+            <span className="font-jp-serif absolute -bottom-4 left-2 text-[160px] font-bold leading-none text-ink/8">
               {meta.kanji}
             </span>
-            <div className="absolute right-3 top-3 h-8 w-8 bg-vermillion" />
-            <div className="absolute right-3 bottom-3 border-[3px] border-ink bg-bone px-1.5 py-0.5 font-mono text-[9px] font-bold tracking-[0.25em]">
-              {meta.name.split(' ')[0]}
-            </div>
+            <div className="absolute right-2.5 top-2.5 h-6 w-6 rounded-full bg-vermillion/80" />
           </div>
         </div>
-        <div className="col-span-8 flex flex-col gap-3 p-5">
-          <div className="flex items-center gap-3">
-            <span className="border-[2px] border-ink px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.3em]">
+        <div className="col-span-8 flex flex-col gap-2 p-4">
+          <div className="flex items-center gap-2">
+            <span className="border border-ink/30 px-1.5 py-0.5 font-mono text-[9px] font-semibold tracking-[0.2em]">
               {meta.name}
             </span>
-            <span className="font-jp text-[11px] tracking-[0.2em] text-ink/65">{meta.jp}</span>
             {game.custom ? (
-              <span className="border-[2px] border-vermillion bg-vermillion px-2 py-0.5 font-mono text-[9px] font-bold tracking-[0.3em] text-bone">
+              <span className="border border-vermillion bg-vermillion px-1.5 py-0.5 font-mono text-[8px] font-semibold tracking-[0.2em] text-bone">
                 CUSTOM
               </span>
             ) : null}
           </div>
-          <h2 className="font-sans text-[34px] font-black leading-[0.95] tracking-[-0.03em]">
+          <h2 className="font-sans text-[24px] font-bold leading-[0.95] tracking-[-0.02em]">
             {game.name}
           </h2>
           {game.jp ? (
-            <div className="font-jp-serif text-[18px] font-bold tracking-[0.1em] text-ink/65">
+            <div className="font-jp-serif text-[14px] font-bold tracking-[0.05em] text-ink/50">
               {game.jp}
             </div>
           ) : null}
-          {game.installDir ? (
-            <div className="font-mono text-[11px] tracking-[0.2em] text-ink/55">
-              {game.installDir}
-            </div>
-          ) : null}
-          <dl className="mt-2 grid grid-cols-3 gap-0 border-t-[2px] border-ink">
+          <dl className="mt-2 grid grid-cols-3 gap-0 border-t border-ink/20">
             <Stat label="SIZE" jp="容量" value={sizeLabel} />
             <Stat
               label={game.custom ? 'CATEGORY' : 'APP ID'}
@@ -232,7 +213,7 @@ function DetailsBody({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-stretch border-b-[3px] border-ink">
+      <div className="flex items-stretch border-b border-ink/20">
         <ActionButton
           primary
           onClick={launch}
@@ -319,10 +300,10 @@ function DetailsBody({
         />
       </div>
 
-      <footer className="border-t-[3px] border-ink bg-ink px-4 py-2 font-mono text-[10px] tracking-[0.3em] text-bone/70">
+      <footer className="border-t border-ink/20 bg-ink/5 px-3 py-1.5 font-mono text-[9px] tracking-[0.2em] text-ink/50">
         <div className="flex items-center justify-between">
-          <span>{copied ? `COPIED · ${copied}` : 'ESC TO CLOSE · 押逃'}</span>
-          <span className="font-jp tracking-[0.2em]">{game.platformId.toUpperCase()}</span>
+          <span>{copied ? `COPIED · ${copied}` : 'ESC TO CLOSE'}</span>
+          <span className="font-jp tracking-[0.15em]">{game.platformId.toUpperCase()}</span>
         </div>
       </footer>
 
@@ -457,18 +438,18 @@ function Stat({
 }): React.JSX.Element {
   return (
     <div
-      className={['flex flex-col gap-1 px-3 py-3', last ? '' : 'border-r-[2px] border-ink'].join(
+      className={['flex flex-col gap-0.5 px-2.5 py-2', last ? '' : 'border-r border-ink/20'].join(
         ' '
       )}
     >
-      <div className="flex items-center justify-between font-mono text-[9px] tracking-[0.3em] text-ink/55">
+      <div className="flex items-center justify-between font-mono text-[8px] tracking-[0.2em] text-ink/40">
         <span>{label}</span>
-        <span className="font-jp text-[10px] tracking-[0.2em]">{jp}</span>
+        <span className="font-jp text-[9px] tracking-[0.15em]">{jp}</span>
       </div>
       <div
         className={[
-          'truncate text-[13px] font-black tracking-tight',
-          mono ? 'font-mono text-[12px]' : 'font-sans',
+          'truncate text-[11px] font-bold tracking-tight',
+          mono ? 'font-mono text-[10px]' : 'font-sans',
           accent ? 'text-vermillion' : 'text-ink'
         ].join(' ')}
         title={value}
@@ -496,21 +477,20 @@ function ActionButton({
   loading?: boolean
   icon?: React.ReactNode
 }): React.JSX.Element {
-  const tone = primary
-    ? 'bg-ink text-bone hover:bg-vermillion'
-    : 'bg-bone text-ink hover:bg-ink hover:text-bone'
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
       className={[
-        'brutal-focus flex flex-1 items-center justify-center gap-2 border-r-[3px] border-ink px-4 py-3 font-mono text-[11px] font-bold tracking-[0.3em] transition-colors last:border-r-0 disabled:opacity-40',
-        tone
+        'flex flex-1 items-center justify-center gap-1.5 border-r border-ink/20 px-3 py-2 font-mono text-[10px] font-semibold tracking-[0.15em] transition-colors last:border-r-0 brutal-focus',
+        primary
+          ? 'bg-ink text-bone hover:bg-vermillion disabled:opacity-40'
+          : 'bg-bone text-ink hover:bg-ink/10 disabled:opacity-40'
       ].join(' ')}
     >
       <span>{loading ? '…' : label}</span>
-      <span className="font-jp text-[12px] tracking-normal">{jp}</span>
+      <span className="font-jp text-[10px] tracking-normal">{jp}</span>
       {!loading && icon ? icon : null}
     </button>
   )
@@ -565,7 +545,7 @@ function FieldRow({
 
 function Arrow(): React.JSX.Element {
   return (
-    <svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true">
+    <svg width="10" height="8" viewBox="0 0 14 10" aria-hidden="true">
       <path
         d="M0 5 H12 M8 1 L12 5 L8 9"
         stroke="currentColor"

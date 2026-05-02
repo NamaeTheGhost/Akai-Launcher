@@ -2,39 +2,33 @@ import { NavLink, Outlet } from 'react-router-dom'
 import Titlebar from './Titlebar'
 import StatusBar from './StatusBar'
 import GameDetails from './GameDetails'
+import DevPanel from './DevPanel/DevPanel'
 import { usePreferences } from '../context/usePreferences'
 
 type NavItem = {
   to: string
   end?: boolean
-  code: string
   en: string
   jp: string
 }
 
 const NAV: NavItem[] = [
-  { to: '/', end: true, code: '01', en: 'HOME', jp: '家' },
-  { to: '/library', code: '02', en: 'LIBRARY', jp: '書庫' },
-  { to: '/about', code: '03', en: 'ABOUT', jp: '情報' },
-  { to: '/settings', code: '04', en: 'CONFIG', jp: '設定' }
+  { to: '/', end: true, en: 'HOME', jp: 'ホーム' },
+  { to: '/library', en: 'LIBRARY', jp: '書庫' },
+  { to: '/about', en: 'ABOUT', jp: '情報' },
+  { to: '/settings', en: 'CONFIG', jp: '設定' }
 ]
 
 function Layout(): React.JSX.Element {
   const { theme, toggleTheme } = usePreferences()
   const isDark = theme === 'INK'
   return (
-    <div className="bg-paper-grain bg-noise flex h-screen w-screen flex-col text-ink">
+    <div className="bg-paper-grain flex h-screen w-screen flex-col text-ink">
       <Titlebar />
 
       <div className="flex min-h-0 flex-1">
         {/* SIDEBAR */}
-        <aside className="flex w-[88px] flex-col border-r-[3px] border-ink bg-bone">
-          {/* Logo block */}
-          <div className="flex h-[88px] flex-col items-center justify-center border-b-[3px] border-ink bg-ink text-bone">
-            <span className="font-jp-serif text-[28px] font-black leading-none">名</span>
-            <span className="mt-1 font-mono text-[8px] tracking-[0.25em]">N/T</span>
-          </div>
-
+        <aside className="flex w-[60px] flex-col border-r border-ink/20 bg-bone">
           {/* Nav */}
           <nav className="flex flex-1 flex-col">
             {NAV.map((item) => (
@@ -44,23 +38,20 @@ function Layout(): React.JSX.Element {
                 end={item.end}
                 className={({ isActive }) =>
                   [
-                    'group relative flex h-[88px] flex-col items-center justify-center border-b-[3px] border-ink transition-colors',
-                    isActive ? 'bg-ink text-bone' : 'text-ink hover:bg-ink hover:text-bone'
+                    'group relative flex h-[60px] flex-col items-center justify-center border-b border-ink/10 transition-colors',
+                    isActive ? 'bg-ink text-bone' : 'text-ink/60 hover:bg-ink/10 hover:text-ink'
                   ].join(' ')
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <span className="font-jp text-[22px] font-black leading-none">{item.jp}</span>
-                    <span className="mt-1.5 font-mono text-[9px] font-bold tracking-[0.25em]">
+                    <span className="font-jp text-[16px] font-semibold leading-none">{item.jp}</span>
+                    <span className="mt-0.5 font-mono text-[7px] font-medium tracking-[0.15em]">
                       {item.en}
                     </span>
                     {isActive ? (
-                      <span className="absolute left-0 top-0 h-full w-[6px] bg-vermillion" />
+                      <span className="absolute left-0 top-0 h-full w-[3px] bg-vermillion" />
                     ) : null}
-                    <span className="absolute right-1.5 top-1.5 font-mono text-[8px] tracking-widest opacity-50">
-                      {item.code}
-                    </span>
                   </>
                 )}
               </NavLink>
@@ -74,29 +65,16 @@ function Layout(): React.JSX.Element {
             title={isDark ? 'Switch to PAPER (light)' : 'Switch to INK (dark)'}
             aria-label="Toggle theme"
             className={[
-              'brutal-focus group relative flex h-[64px] flex-col items-center justify-center border-t-[3px] border-ink transition-colors',
+              'flex h-[48px] flex-col items-center justify-center border-t border-ink/10 transition-colors',
               isDark
-                ? 'bg-bone text-ink hover:bg-vermillion hover:text-bone'
-                : 'bg-ink text-bone hover:bg-vermillion'
+                ? 'text-ink/60 hover:bg-vermillion hover:text-bone'
+                : 'text-ink/60 hover:bg-vermillion hover:text-bone'
             ].join(' ')}
           >
-            <span className="font-jp-serif text-[20px] font-black leading-none">
+            <span className="font-jp-serif text-[14px] font-bold leading-none">
               {isDark ? '日' : '月'}
             </span>
-            <span className="mt-1 font-mono text-[8px] font-bold tracking-[0.25em]">
-              {isDark ? 'PAPER' : 'INK'}
-            </span>
-            <span className="absolute right-1.5 top-1.5 font-mono text-[8px] tracking-widest opacity-50">
-              T/H
-            </span>
           </button>
-
-          {/* Vertical JP label */}
-          <div className="flex items-center justify-center border-t-[3px] border-ink py-4">
-            <span className="vertical-rl font-jp-serif text-[11px] font-bold tracking-[0.4em] text-ink/70">
-              起動装置 · 二〇二六
-            </span>
-          </div>
         </aside>
 
         {/* MAIN */}
@@ -107,6 +85,7 @@ function Layout(): React.JSX.Element {
 
       <StatusBar />
       <GameDetails />
+      <DevPanel />
     </div>
   )
 }

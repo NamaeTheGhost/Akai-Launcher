@@ -1,5 +1,8 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useScan } from '../context/useScan'
+import { useDevState } from '../context/DevToolsContext'
+import { devLog, devTimeline } from '../context/DevToolsContext'
 import type { Game } from '@preload/types'
 import { ALL_PLATFORMS, PLATFORM_META } from '../lib/platformMeta'
 
@@ -10,45 +13,51 @@ function Home(): React.JSX.Element {
   const { scanning, rescan, platforms, installedPlatforms, allGames, totalSizeBytes, selectGame } =
     useScan()
 
-  const featured: Game | undefined = pickFeatured(allGames)
-  const showcase = pickShowcase(allGames, 6, featured?.id)
+  const featured: Game | undefined = useMemo(() => pickFeatured(allGames), [allGames])
+  const showcase = useMemo(() => pickShowcase(allGames, 6, featured?.id), [allGames, featured?.id])
+
+  useDevState('games.count', allGames.length)
+  useDevState('platforms.installed', installedPlatforms.length)
+  useDevState('scanning', scanning)
+  useDevState('featured.name', featured?.name)
+  useDevState('showcase.count', showcase.length)
+  useDevState('total.size', formatBytes(totalSizeBytes))
 
   return (
     <div className="bg-paper-grain min-h-full">
-      <div className="flex items-stretch border-b-[3px] border-ink">
-        <div className="bg-stripes h-8 flex-1" />
-        <div className="flex items-center gap-3 border-l-[3px] border-ink bg-ink px-4 font-mono text-[10px] uppercase tracking-[0.3em] text-bone">
-          <span>SECTION_01</span>
+      <div className="flex items-stretch border-b border-ink">
+        <div className="flex items-center gap-2 border-l border-ink bg-ink px-3 font-mono text-[9px] uppercase tracking-[0.2em] text-bone">
+          <span>HOME</span>
           <span className="text-bone/50">/</span>
-          <span className="font-jp tracking-[0.2em]">入口</span>
+          <span className="font-jp tracking-[0.15em]">ホーム</span>
         </div>
       </div>
 
-      <div className="p-8">
+      <div className="p-6">
         {/* HERO */}
-        <header className="grid grid-cols-12 gap-6">
+        <header className="grid grid-cols-12 gap-4">
           <div className="col-span-12 lg:col-span-8">
-            <div className="flex items-baseline gap-4">
-              <span className="font-mono text-[11px] font-bold tracking-[0.4em] text-vermillion">
-                ※ KIDOU / 起動
+            <div className="flex items-baseline gap-3">
+              <span className="font-mono text-[10px] font-semibold tracking-[0.3em] text-vermillion">
+                ※ AKAI LAUNCHER
               </span>
-              <span className="h-px flex-1 bg-ink" />
-              <span className="font-mono text-[10px] tracking-[0.3em] text-ink/60">
-                INDEX 00 — LAUNCH
+              <span className="h-px flex-1 bg-ink/20" />
+              <span className="font-mono text-[9px] tracking-[0.2em] text-ink/40">
+                v1.0.0
               </span>
             </div>
 
-            <h1 className="mt-4 flex items-end gap-4 font-sans text-[80px] font-black leading-[0.85] tracking-[-0.04em]">
-              <span>NAMAE</span>
-              <span className="font-jp-serif text-[64px] leading-none text-vermillion">名前</span>
+            <h1 className="mt-3 flex items-end gap-3 font-sans text-[56px] font-bold leading-[0.9] tracking-[-0.03em]">
+              <span>AKAI</span>
+              <span className="font-jp-serif text-[44px] leading-none text-vermillion">赤い</span>
             </h1>
-            <h2 className="font-sans text-[64px] font-black leading-[0.85] tracking-[-0.04em] text-ink/85">
-              TYPE.
-              <span className="ml-3 font-jp-serif text-[44px] text-ink/60">活字</span>
+            <h2 className="font-sans text-[44px] font-bold leading-[0.9] tracking-[-0.03em] text-ink/80">
+              LAUNCHER
+              <span className="ml-2 font-jp-serif text-[32px] text-ink/50">起動装置</span>
             </h2>
 
-            {/* Real stats strip */}
-            <div className="mt-7 grid grid-cols-3 gap-0 border-[3px] border-ink bg-bone">
+            {/* Stats strip */}
+            <div className="mt-5 grid grid-cols-3 gap-0 border border-ink bg-bone">
               <BigStat
                 label="TITLES"
                 jp="作品"
@@ -65,29 +74,30 @@ function Home(): React.JSX.Element {
             </div>
           </div>
 
-          {/* HINOMARU + actions */}
+          {/* Actions */}
           <div className="col-span-12 lg:col-span-4">
-            <div className="flex h-full flex-col items-end justify-between gap-6">
+            <div className="flex h-full flex-col items-end justify-between gap-4">
               <div className="relative">
-                <div className="h-[180px] w-[180px] rounded-full bg-vermillion" />
+                <div className="h-[120px] w-[120px] rounded-full border-2 border-ink/10 bg-vermillion/90" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-bone">
-                  <span className="font-jp-serif text-[40px] font-black leading-none">始</span>
-                  <span className="mt-2 font-mono text-[9px] font-bold tracking-[0.3em]">
-                    BEGIN
+                  <span className="font-jp-serif text-[28px] font-bold leading-none">始</span>
+                  <span className="mt-1 font-mono text-[8px] font-semibold tracking-[0.2em]">
+                    START
                   </span>
-                </div>
-                <div className="absolute -bottom-3 -right-3 border-[3px] border-ink bg-bone px-2 py-1 font-mono text-[9px] font-bold tracking-[0.2em]">
-                  №·2026·04
                 </div>
               </div>
               <button
                 type="button"
-                onClick={rescan}
+                onClick={() => {
+                  devTimeline.track('scan', 'Rescan initiated')
+                  devLog.info('Starting system rescan')
+                  rescan()
+                }}
                 disabled={scanning}
-                className="brutal-focus flex w-full items-center justify-between gap-2 border-[3px] border-ink bg-ink px-4 py-3 font-mono text-[11px] font-bold tracking-[0.3em] text-bone transition-colors hover:bg-vermillion hover:border-vermillion disabled:opacity-60"
+                className="btn-primary w-full"
               >
-                <span>{scanning ? 'SCANNING…' : 'RESCAN SYSTEM'}</span>
-                <span className="font-jp text-[12px] tracking-normal">
+                <span>{scanning ? 'SCANNING…' : 'RESCAN'}</span>
+                <span className="font-jp text-[11px] tracking-normal">
                   {scanning ? '走査' : '再走査'}
                 </span>
               </button>
@@ -96,17 +106,17 @@ function Home(): React.JSX.Element {
         </header>
 
         {/* FEATURED + PLATFORM PANEL */}
-        <section className="mt-10 grid grid-cols-12 gap-6">
+        <section className="mt-8 grid grid-cols-12 gap-4">
           {/* FEATURED */}
-          <article className="col-span-12 border-[3px] border-ink bg-bone lg:col-span-8">
-            <div className="flex items-stretch border-b-[3px] border-ink bg-ink text-bone">
-              <div className="flex items-center gap-3 px-4 py-2 font-mono text-[10px] font-bold tracking-[0.3em]">
-                <span className="inline-block h-2 w-2 bg-vermillion" />
+          <article className="col-span-12 border border-ink bg-bone lg:col-span-8">
+            <div className="flex items-stretch border-b border-ink bg-ink text-bone">
+              <div className="flex items-center gap-2 px-3 py-1.5 font-mono text-[9px] font-semibold tracking-[0.2em]">
+                <span className="inline-block h-1.5 w-1.5 bg-vermillion" />
                 <span>FEATURED</span>
                 <span className="text-bone/50">·</span>
-                <span className="font-jp tracking-[0.2em]">注目</span>
+                <span className="font-jp tracking-[0.15em]">注目</span>
               </div>
-              <div className="ml-auto flex items-center px-4 font-mono text-[10px] tracking-[0.3em] text-bone/70">
+              <div className="ml-auto flex items-center px-3 font-mono text-[9px] tracking-[0.2em] text-bone/60">
                 {featured ? PLATFORM_LABEL[featured.platformId].name : 'NO TITLES'}
               </div>
             </div>
@@ -119,19 +129,19 @@ function Home(): React.JSX.Element {
           </article>
 
           {/* PLATFORM PANEL */}
-          <aside className="col-span-12 border-[3px] border-ink bg-bone lg:col-span-4">
-            <div className="flex items-center justify-between border-b-[3px] border-ink bg-ink px-4 py-2 font-mono text-[10px] font-bold tracking-[0.3em] text-bone">
-              <div className="flex items-center gap-3">
+          <aside className="col-span-12 border border-ink bg-bone lg:col-span-4">
+            <div className="flex items-center justify-between border-b border-ink bg-ink px-3 py-1.5 font-mono text-[9px] font-semibold tracking-[0.2em] text-bone">
+              <div className="flex items-center gap-2">
                 <span>PLATFORMS</span>
-                <span className="font-jp tracking-[0.2em]">基幹</span>
+                <span className="font-jp tracking-[0.15em]">基幹</span>
               </div>
-              <span className="text-bone/60">
+              <span className="text-bone/50">
                 {installedPlatforms.length.toString().padStart(2, '0')} /{' '}
                 {PLATFORM_ORDER.length.toString().padStart(2, '0')}
               </span>
             </div>
 
-            <ul className="scrollbar-brutal max-h-[440px] overflow-y-auto">
+            <ul className="scrollbar-brutal max-h-[380px] overflow-y-auto">
               {PLATFORM_ORDER.map((id) => {
                 const p = platforms.find((x) => x.id === id)
                 const meta = PLATFORM_LABEL[id]
@@ -140,40 +150,37 @@ function Home(): React.JSX.Element {
                 return (
                   <li
                     key={id}
-                    className="flex items-stretch border-b-[2px] border-ink last:border-b-0"
+                    className="flex items-stretch border-b last:border-b-0"
                   >
                     <div
                       className={[
-                        'flex w-12 shrink-0 items-center justify-center font-jp-serif text-[24px] font-black',
+                        'flex w-10 shrink-0 items-center justify-center font-jp-serif text-[20px] font-bold',
                         installed
                           ? 'bg-ink text-bone'
-                          : 'bg-bone text-ink/30 border-r-[2px] border-ink'
+                          : 'bg-bone text-ink/20 border-r border-ink/20'
                       ].join(' ')}
                     >
                       {meta.kanji}
                     </div>
-                    <div className="flex flex-1 items-center justify-between gap-2 px-3 py-2">
+                    <div className="flex flex-1 items-center justify-between gap-2 px-2.5 py-1.5">
                       <div className="min-w-0">
                         <div
                           className={[
-                            'truncate font-mono text-[11px] font-bold tracking-[0.25em]',
-                            installed ? 'text-ink' : 'text-ink/40'
+                            'truncate font-mono text-[10px] font-semibold tracking-[0.2em]',
+                            installed ? 'text-ink' : 'text-ink/30'
                           ].join(' ')}
                         >
                           {meta.name}
                         </div>
-                        <div className="font-jp text-[10px] tracking-[0.2em] text-ink/55">
-                          {meta.jp}
-                        </div>
                       </div>
-                      <div className="flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.25em]">
+                      <div className="flex items-center gap-1.5 font-mono text-[9px] font-semibold tracking-[0.2em]">
                         <span
                           className={[
-                            'inline-block h-2 w-2',
-                            installed ? 'bg-vermillion' : 'border-[2px] border-ink/40'
+                            'inline-block h-1.5 w-1.5',
+                            installed ? 'bg-vermillion' : 'border border-ink/20'
                           ].join(' ')}
                         />
-                        <span className={installed ? 'text-ink' : 'text-ink/40'}>
+                        <span className={installed ? 'text-ink' : 'text-ink/30'}>
                           {installed ? `${count.toString().padStart(2, '0')}` : '—'}
                         </span>
                       </div>
@@ -185,24 +192,21 @@ function Home(): React.JSX.Element {
           </aside>
         </section>
 
-        {/* SHOWCASE — top games by size */}
-        <section className="mt-10">
-          <div className="flex items-end justify-between border-b-[3px] border-ink pb-3">
-            <div className="flex items-baseline gap-4">
-              <h2 className="font-sans text-[36px] font-black leading-none tracking-[-0.03em]">
+        {/* SHOWCASE */}
+        <section className="mt-8">
+          <div className="flex items-end justify-between border-b border-ink pb-2">
+            <div className="flex items-baseline gap-3">
+              <h2 className="font-sans text-[28px] font-bold leading-none tracking-[-0.02em]">
                 LIBRARY
               </h2>
-              <span className="font-jp-serif text-[24px] font-bold text-ink/60">書庫</span>
-              <span className="ml-2 font-mono text-[10px] tracking-[0.3em] text-ink/55">
-                TOP BY DISK
-              </span>
+              <span className="font-jp-serif text-[20px] font-bold text-ink/50">書庫</span>
             </div>
             <Link
               to="/library"
-              className="brutal-focus flex items-center gap-2 border-[3px] border-ink bg-bone px-3 py-1.5 font-mono text-[10px] font-bold tracking-[0.25em] transition-colors hover:bg-ink hover:text-bone"
+              className="btn-secondary inline-flex"
             >
               <span>VIEW ALL</span>
-              <span className="font-jp text-[12px] tracking-normal">全て</span>
+              <span className="font-jp text-[11px] tracking-normal">全て</span>
             </Link>
           </div>
 
@@ -211,7 +215,7 @@ function Home(): React.JSX.Element {
           ) : showcase.length === 0 ? (
             <EmptyShowcase />
           ) : (
-            <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {showcase.map((g) => (
                 <GameCard key={g.id} game={g} onSelect={() => selectGame(g.id)} />
               ))}
@@ -219,17 +223,9 @@ function Home(): React.JSX.Element {
           )}
         </section>
 
-        {/* WA footer */}
-        <section className="mt-10 grid grid-cols-12 items-stretch gap-0 border-[3px] border-ink">
-          <div className="col-span-3 flex items-center justify-center border-r-[3px] border-ink bg-ink p-4 text-bone">
-            <span className="font-jp-serif text-[36px] font-black leading-none">和</span>
-          </div>
-          <div className="col-span-9 flex flex-col justify-center gap-1 p-4 font-mono text-[11px] tracking-[0.2em] text-ink/80">
-            <div className="font-bold">WA — HARMONY OF FORM, FUNCTION, AND VOID.</div>
-            <div className="font-jp text-[13px] tracking-[0.2em] text-ink/60">
-              形と機能と余白の和。
-            </div>
-          </div>
+        {/* Footer */}
+        <section className="mt-8 border border-ink bg-bone px-4 py-3 font-mono text-[10px] tracking-[0.15em] text-ink/60">
+          <span>AKAI LAUNCHER · 二〇二六</span>
         </section>
       </div>
     </div>
@@ -251,17 +247,17 @@ function BigStat({
 }): React.JSX.Element {
   return (
     <div
-      className={['flex flex-col gap-1 px-5 py-4', last ? '' : 'border-r-[3px] border-ink'].join(
+      className={['flex flex-col gap-0.5 px-4 py-3', last ? '' : 'border-r border-ink'].join(
         ' '
       )}
     >
-      <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.3em] text-ink/60">
+      <div className="flex items-center justify-between font-mono text-[9px] tracking-[0.2em] text-ink/50">
         <span>{label}</span>
-        <span className="font-jp text-[11px] tracking-[0.2em]">{jp}</span>
+        <span className="font-jp text-[10px] tracking-[0.15em]">{jp}</span>
       </div>
       <div
         className={[
-          'font-sans text-[32px] font-black tracking-tight',
+          'font-sans text-[24px] font-bold tracking-tight',
           accent ? 'text-vermillion' : 'text-ink'
         ].join(' ')}
       >
@@ -276,6 +272,8 @@ function FeaturedCard({ game, onSelect }: { game: Game; onSelect: () => void }):
 
   const launch = (e: React.MouseEvent): void => {
     e.stopPropagation()
+    devTimeline.track('launch', `Launching ${game.name}`, game.platformId)
+    devLog.info(`Launching ${game.name}`, { platform: game.platformId })
     void window.api.launcher.launchGame({
       id: game.id,
       name: game.name,
@@ -289,6 +287,7 @@ function FeaturedCard({ game, onSelect }: { game: Game; onSelect: () => void }):
 
   const reveal = (e: React.MouseEvent): void => {
     e.stopPropagation()
+    devLog.debug(`Reveal folder for ${game.name}`)
     const target = game.launchExe || game.installPath
     if (target) void window.api.launcher.showInFolder(target)
   }
@@ -298,61 +297,48 @@ function FeaturedCard({ game, onSelect }: { game: Game; onSelect: () => void }):
       <button
         type="button"
         onClick={onSelect}
-        className="brutal-focus col-span-12 border-b-[3px] border-ink md:col-span-5 md:border-b-0 md:border-r-[3px]"
+        className="brutal-focus col-span-12 border-b border-ink md:col-span-5 md:border-b-0 md:border-r"
       >
         <div className="relative aspect-[4/5] overflow-hidden bg-bone">
-          <div className="absolute inset-0">
-            <div className="absolute inset-x-0 top-1/3 h-px bg-ink/20" />
-            <div className="absolute inset-x-0 top-2/3 h-px bg-ink/20" />
-            <div className="absolute inset-y-0 left-1/3 w-px bg-ink/20" />
-            <div className="absolute inset-y-0 left-2/3 w-px bg-ink/20" />
-          </div>
-          <span className="font-jp-serif absolute left-4 top-2 text-[260px] font-black leading-none text-ink">
+          <span className="font-jp-serif absolute left-3 top-2 text-[180px] font-bold leading-none text-ink/10">
             {meta.kanji}
           </span>
-          <div className="absolute bottom-6 left-4 right-4 h-3 bg-ink" />
-          <div className="absolute right-4 top-4 h-10 w-10 bg-vermillion" />
-          <div className="absolute bottom-12 right-4 border-[3px] border-vermillion px-2 py-1 font-jp-serif text-[14px] font-black tracking-widest text-vermillion">
-            第一
-          </div>
+          <div className="absolute right-3 top-3 h-8 w-8 rounded-full bg-vermillion/80" />
         </div>
       </button>
 
-      <div className="col-span-12 flex flex-col p-6 md:col-span-7">
-        <div className="font-mono text-[10px] font-bold tracking-[0.3em] text-ink/60">
+      <div className="col-span-12 flex flex-col p-4 md:col-span-7">
+        <div className="font-mono text-[9px] font-semibold tracking-[0.2em] text-ink/50">
           PLATFORM · {meta.name}
         </div>
         <h3
-          className="mt-2 cursor-pointer font-sans text-[34px] font-black leading-none tracking-[-0.03em] hover:text-vermillion"
+          className="mt-1 cursor-pointer font-sans text-[24px] font-bold leading-none tracking-[-0.02em] hover:text-vermillion"
           onClick={onSelect}
         >
           {game.name}
         </h3>
-        <div className="mt-1 font-jp-serif text-[20px] font-bold tracking-[0.1em] text-ink/65">
-          {meta.jp}
-        </div>
 
-        <p className="mt-5 font-mono text-[11px] leading-relaxed tracking-wide text-ink/65">
+        <p className="mt-3 font-mono text-[10px] leading-relaxed tracking-wide text-ink/50">
           {game.installPath ?? 'INSTALL PATH UNKNOWN'}
         </p>
 
-        <dl className="mt-6 grid grid-cols-3 gap-0 border-t-[2px] border-ink font-mono text-[10px] uppercase tracking-[0.2em]">
+        <dl className="mt-4 grid grid-cols-3 gap-0 border-t border-ink font-mono text-[9px] uppercase tracking-[0.15em]">
           <SmallStat label="Size" value={formatBytes(game.sizeBytes)} />
           <SmallStat label="Status" value="READY" accent />
           <SmallStat label="Source" value={meta.name.split(' ')[0]} last />
         </dl>
 
-        <div className="mt-auto pt-6">
+        <div className="mt-auto pt-4">
           <div className="flex flex-wrap gap-0">
-            <BrutalButton primary onClick={launch}>
+            <BrutalButton primary onClick={launch} className="flex-1 min-w-0">
               <span>LAUNCH</span>
-              <span className="font-jp text-[14px]">起動</span>
+              <span className="font-jp text-[12px]">起動</span>
               <Arrow />
             </BrutalButton>
-            <BrutalButton onClick={onSelect}>
+            <BrutalButton onClick={onSelect} className="flex-1 min-w-0">
               <span>DETAILS</span>
             </BrutalButton>
-            <BrutalButton onClick={reveal}>
+            <BrutalButton onClick={reveal} className="flex-1 min-w-0">
               <span>FOLDER</span>
             </BrutalButton>
           </div>
@@ -364,19 +350,19 @@ function FeaturedCard({ game, onSelect }: { game: Game; onSelect: () => void }):
 
 function FeaturedEmpty({ scanning }: { scanning: boolean }): React.JSX.Element {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 p-12 text-center">
-      <div className="font-jp-serif text-[64px] font-black leading-none">
+    <div className="flex flex-col items-center justify-center gap-2 p-8 text-center">
+      <div className="font-jp-serif text-[48px] font-bold leading-none text-ink/30">
         {scanning ? '走' : '無'}
       </div>
-      <div className="font-mono text-[11px] tracking-[0.3em] text-ink/65">
-        {scanning ? 'SCANNING SYSTEM · 走査中' : 'NO GAMES DETECTED · ゲーム未検出'}
+      <div className="font-mono text-[10px] tracking-[0.2em] text-ink/50">
+        {scanning ? 'SCANNING SYSTEM' : 'NO GAMES DETECTED'}
       </div>
       {!scanning ? (
         <Link
           to="/library"
-          className="mt-2 border-[3px] border-ink bg-ink px-3 py-1.5 font-mono text-[10px] font-bold tracking-[0.3em] text-bone hover:bg-vermillion hover:border-vermillion"
+          className="btn-primary inline-flex mt-2"
         >
-          OPEN LIBRARY · 書庫
+          OPEN LIBRARY
         </Link>
       ) : null}
     </div>
@@ -388,6 +374,7 @@ function GameCard({ game, onSelect }: { game: Game; onSelect: () => void }): Rea
 
   const launch = (e: React.MouseEvent): void => {
     e.stopPropagation()
+    devTimeline.track('launch', game.name, game.platformId)
     void window.api.launcher.launchGame({
       id: game.id,
       name: game.name,
@@ -400,54 +387,50 @@ function GameCard({ game, onSelect }: { game: Game; onSelect: () => void }): Rea
   }
 
   return (
-    <article className="group relative flex flex-col border-[3px] border-ink bg-bone">
+    <article className="group relative flex flex-col border border-ink bg-bone">
       <button
         type="button"
         onClick={onSelect}
         className="brutal-focus flex flex-1 flex-col text-left"
       >
-        <div className="flex items-center justify-between border-b-[3px] border-ink bg-ink px-3 py-1.5 font-mono text-[10px] font-bold tracking-[0.25em] text-bone">
+        <div className="flex items-center justify-between border-b border-ink bg-ink px-2.5 py-1 font-mono text-[9px] font-semibold tracking-[0.2em] text-bone">
           <span className="truncate">{meta.name}</span>
-          <span className="border-[2px] border-bone px-1.5 py-0.5 text-[9px] tracking-[0.2em]">
+          <span className="border border-bone px-1 py-0.5 text-[8px] tracking-[0.15em]">
             READY
           </span>
         </div>
 
-        <div className="relative aspect-[5/3] overflow-hidden border-b-[3px] border-ink bg-bone">
-          <div className="absolute inset-0">
-            <div className="absolute inset-x-0 top-1/2 h-px bg-ink/15" />
-            <div className="absolute inset-y-0 left-1/2 w-px bg-ink/15" />
-          </div>
-          <span className="font-jp-serif absolute -bottom-6 left-2 text-[180px] font-black leading-none text-ink">
+        <div className="relative aspect-[5/3] overflow-hidden border-b border-ink bg-bone">
+          <span className="font-jp-serif absolute -bottom-4 left-2 text-[120px] font-bold leading-none text-ink/8">
             {meta.kanji}
           </span>
-          <div className="absolute right-3 top-3 flex items-center gap-1.5">
-            <span className="inline-block h-2 w-2 bg-ink" />
-            <span className="font-mono text-[9px] font-bold tracking-[0.2em]">
+          <div className="absolute right-2.5 top-2.5 flex items-center gap-1">
+            <span className="inline-block h-1.5 w-1.5 bg-ink/60" />
+            <span className="font-mono text-[8px] font-semibold tracking-[0.15em]">
               {game.platformId.toUpperCase()}
             </span>
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col gap-2 p-4">
-          <div className="font-sans text-[18px] font-black leading-tight tracking-tight">
+        <div className="flex flex-1 flex-col gap-1.5 p-3">
+          <div className="font-sans text-[15px] font-bold leading-tight tracking-tight">
             {game.name}
           </div>
-          <div className="truncate font-mono text-[10px] tracking-[0.2em] text-ink/55">
+          <div className="truncate font-mono text-[9px] tracking-[0.15em] text-ink/40">
             {game.installPath ?? '—'}
           </div>
         </div>
       </button>
 
-      <div className="flex items-center justify-between border-t-[2px] border-ink px-4 py-2 font-mono text-[10px] tracking-[0.25em]">
-        <span className="text-ink/60">SIZE · {formatBytes(game.sizeBytes)}</span>
+      <div className="flex items-center justify-between border-t border-ink px-3 py-1.5 font-mono text-[9px] tracking-[0.2em]">
+        <span className="text-ink/50">SIZE · {formatBytes(game.sizeBytes)}</span>
         <button
           type="button"
           onClick={launch}
-          className="brutal-focus flex items-center gap-1.5 border-[2px] border-ink bg-bone px-2.5 py-1 font-bold transition-colors hover:bg-ink hover:text-bone"
+          className="btn-ghost"
         >
           <span>RUN</span>
-          <span className="font-jp text-[11px] tracking-normal">起</span>
+          <span className="font-jp text-[10px] tracking-normal">起</span>
         </button>
       </div>
     </article>
@@ -456,15 +439,15 @@ function GameCard({ game, onSelect }: { game: Game; onSelect: () => void }): Rea
 
 function ScanningPanel(): React.JSX.Element {
   return (
-    <div className="mt-5 border-[3px] border-ink bg-bone">
-      <div className="border-b-[3px] border-ink bg-ink px-4 py-2 font-mono text-[10px] font-bold tracking-[0.3em] text-bone">
-        SCANNING SYSTEM · 走査中
+    <div className="mt-4 border border-ink bg-bone">
+      <div className="border-b border-ink bg-ink px-3 py-1.5 font-mono text-[9px] font-semibold tracking-[0.2em] text-bone">
+        SCANNING SYSTEM
       </div>
-      <div className="space-y-3 p-6 font-mono text-[11px] tracking-[0.25em] text-ink/70">
+      <div className="space-y-2 p-4 font-mono text-[10px] tracking-[0.2em] text-ink/60">
         <div>READING REGISTRY HIVES…</div>
         <div>PARSING STEAM LIBRARIES…</div>
         <div>READING EPIC MANIFESTS…</div>
-        <div className="bg-stripes h-3 w-full" />
+        <div className="bg-stripes h-2 w-full" />
       </div>
     </div>
   )
@@ -472,16 +455,16 @@ function ScanningPanel(): React.JSX.Element {
 
 function EmptyShowcase(): React.JSX.Element {
   return (
-    <div className="mt-5 border-[3px] border-ink bg-bone p-10 text-center">
-      <div className="mb-2 font-jp-serif text-[48px] font-black text-ink">無</div>
-      <div className="font-mono text-[11px] tracking-[0.25em] text-ink/65">
-        NO GAMES FOUND · 該当なし
+    <div className="mt-4 border border-ink bg-bone p-6 text-center">
+      <div className="mb-1 font-jp-serif text-[36px] font-bold text-ink/30">無</div>
+      <div className="font-mono text-[10px] tracking-[0.2em] text-ink/50">
+        NO GAMES FOUND
       </div>
       <Link
         to="/library"
-        className="mt-4 inline-block border-[3px] border-ink bg-ink px-4 py-2 font-mono text-[10px] font-bold tracking-[0.3em] text-bone hover:bg-vermillion hover:border-vermillion"
+        className="btn-primary inline-block mt-3"
       >
-        OPEN LIBRARY · 書庫
+        OPEN LIBRARY
       </Link>
     </div>
   )
@@ -500,13 +483,13 @@ function SmallStat({
 }): React.JSX.Element {
   return (
     <div
-      className={['flex flex-col gap-1 px-3 py-3', last ? '' : 'border-r-[2px] border-ink'].join(
+      className={['flex flex-col gap-0.5 px-2.5 py-2', last ? '' : 'border-r border-ink'].join(
         ' '
       )}
     >
-      <dt className="text-[9px] text-ink/55">{label}</dt>
+      <dt className="text-[8px] text-ink/40">{label}</dt>
       <dd
-        className={['truncate text-[12px] font-bold', accent ? 'text-vermillion' : 'text-ink'].join(
+        className={['truncate text-[11px] font-semibold', accent ? 'text-vermillion' : 'text-ink'].join(
           ' '
         )}
       >
@@ -519,19 +502,16 @@ function SmallStat({
 function BrutalButton({
   children,
   primary,
-  onClick
+  onClick,
+  className
 }: {
   children: React.ReactNode
   primary?: boolean
   onClick?: (e: React.MouseEvent) => void
+  className?: string
 }): React.JSX.Element {
-  const base =
-    'brutal-focus -ml-[3px] flex items-center gap-2 border-[3px] border-ink px-5 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.25em] transition-colors first:ml-0'
-  const tone = primary
-    ? 'bg-ink text-bone hover:bg-vermillion hover:border-vermillion'
-    : 'bg-bone text-ink hover:bg-ink hover:text-bone'
   return (
-    <button type="button" onClick={onClick} className={`${base} ${tone}`}>
+    <button type="button" onClick={onClick} className={className ? `${primary ? 'btn-primary' : 'btn-secondary'} ${className}` : primary ? 'btn-primary' : 'btn-secondary'}>
       {children}
     </button>
   )
@@ -539,7 +519,7 @@ function BrutalButton({
 
 function Arrow(): React.JSX.Element {
   return (
-    <svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true">
+    <svg width="12" height="8" viewBox="0 0 14 10" aria-hidden="true">
       <path
         d="M0 5 H12 M8 1 L12 5 L8 9"
         stroke="currentColor"

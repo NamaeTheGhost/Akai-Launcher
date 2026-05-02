@@ -199,32 +199,32 @@ textarea {
   text-orientation: mixed;
 }
 
-/* Sharp focus ring (no rounding, brutalist) */
+/* Sharp focus ring */
 .brutal-focus:focus-visible {
-  outline: 3px solid var(--color-vermillion);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-vermillion);
+  outline-offset: 1px;
 }
 
 /* Brutal form input */
 .brutal-input {
   display: block;
   width: 100%;
-  border: 3px solid var(--color-ink);
+  border: 2px solid var(--color-ink);
   background: var(--color-bone);
   color: var(--color-ink);
   font-family: var(--font-mono);
   font-size: 12px;
-  letter-spacing: 0.04em;
-  padding: 0.55rem 0.75rem;
+  letter-spacing: 0.03em;
+  padding: 0.5rem 0.65rem;
   outline: none;
+  transition: border-color 0.15s ease;
 }
 .brutal-input::placeholder {
-  color: rgba(10, 10, 10, 0.35);
+  color: rgba(10, 10, 10, 0.3);
 }
 .brutal-input:focus {
-  background: #fff;
-  outline: 3px solid var(--color-vermillion);
-  outline-offset: -3px;
+  border-color: var(--color-vermillion);
+  background: var(--color-bone);
 }
 
 /* Hide scrollbar but keep scrolling */
@@ -275,4 +275,131 @@ textarea {
 }
 .animate-blink {
   animation: blink 1.1s steps(1, end) infinite;
+}
+
+/* ============================================================
+ * BUTTONS · minimal
+ * ============================================================ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-bone);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  padding: 0.55rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-primary:hover {
+  background: var(--color-vermillion);
+  border-color: var(--color-vermillion);
+}
+.btn-primary:active {
+  opacity: 0.85;
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px solid var(--color-ink);
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  padding: 0.55rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-secondary:hover {
+  background: var(--color-ink);
+  color: var(--color-bone);
+}
+.btn-secondary:active {
+  opacity: 0.85;
+}
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: none;
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.btn-ghost:hover {
+  color: var(--color-vermillion);
+}
+.btn-ghost:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-sm {
+  font-size: 9px;
+  padding: 0.3rem 0.55rem;
+  letter-spacing: 0.15em;
+  border-width: 2px;
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 2px solid var(--color-vermillion);
+  background: transparent;
+  color: var(--color-vermillion);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-danger:hover {
+  background: var(--color-vermillion);
+  color: var(--color-bone);
+}
+
+/* ============================================================
+ * DEV PANEL scrollbar
+ * ============================================================ */
+.scrollbar-dev::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar-dev::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.scrollbar-dev::-webkit-scrollbar-thumb {
+  background: #ece6d622;
+}
+.scrollbar-dev::-webkit-scrollbar-thumb:hover {
+  background: #ece6d644;
 }

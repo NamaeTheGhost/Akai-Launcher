@@ -6,6 +6,7 @@ import { HashRouter } from 'react-router-dom'
 import App from './App'
 import { ScanProvider } from './context/ScanContext'
 import { PreferencesProvider } from './context/PreferencesContext'
+import { DevToolsProvider } from './context/DevToolsContext'
 import OverlayApp from './overlay/OverlayApp'
 
 const isOverlay =
@@ -29,11 +30,13 @@ if (isOverlay) {
   root.render(
     <StrictMode>
       <PreferencesProvider>
-        <ScanProvider>
-          <HashRouter>
-            <App />
-          </HashRouter>
-        </ScanProvider>
+        <DevToolsProvider>
+          <ScanProvider>
+            <HashRouter>
+              <App />
+            </HashRouter>
+          </ScanProvider>
+        </DevToolsProvider>
       </PreferencesProvider>
     </StrictMode>
   )
