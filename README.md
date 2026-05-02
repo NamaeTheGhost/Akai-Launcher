@@ -63,7 +63,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/NamaeTachii/akai-game-launcher.git
+git clone https://github.com/NamaeTheGhost/Akai-Launcher.git
 cd akai-game-launcher
 
 # Install dependencies
@@ -104,37 +104,6 @@ Output files will be placed in the `dist/` directory.
 > 💡 **Tip:** Cross-platform builds may require platform-specific toolchains. Refer to the [electron-builder docs](https://www.electron.build/multi-platform-build) for setup guidance. Building on the same OS as your target platform is recommended for best results.
 
 ---
-
-## 🗂️ Project Structure
-
-```
-akai-game-launcher/
-├── src/
-│   ├── main/                  # Electron main process
-│   ├── preload/               # Preload scripts
-│   └── renderer/              # React application
-│       ├── components/
-│       │   ├── CustomGameModal.tsx
-│       │   ├── CollectionModal.tsx
-│       │   ├── GameDetails.tsx
-│       │   ├── Titlebar.tsx
-│       │   └── StatusBar.tsx
-│       ├── pages/
-│       │   ├── Home.tsx
-│       │   ├── Library.tsx
-│       │   ├── Settings.tsx
-│       │   └── About.tsx
-│       ├── context/
-│       │   ├── ScanContext.tsx
-│       │   └── PreferencesContext.tsx
-│       ├── hooks/
-│       │   └── useSession.ts
-│       └── OverlayApp.tsx
-├── electron.vite.config.ts
-├── electron-builder.yml
-├── package.json
-└── tsconfig.json
-```
 
 ---
 
