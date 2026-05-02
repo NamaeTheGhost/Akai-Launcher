@@ -1,12 +1,10 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/NamaeTachii/akai-game-launcher/main/assets/logo.png" alt="Akai Game Launcher" width="120" />
-
 # 🎮 Akai Game Launcher
 
 **A sleek, modern desktop game launcher built for gamers who appreciate simplicity and speed.**
 
-[![Version](https://img.shields.io/badge/version-0.5.0-red?style=flat-square&logo=semver)](https://github.com/NamaeTachii/akai-game-launcher/releases)
+![Version](https://img.shields.io/badge/version-0.5.0-red?style=flat-square)
 [![Electron](https://img.shields.io/badge/Electron-v39-47848F?style=flat-square&logo=electron&logoColor=white)](https://electronjs.org)
 [![React](https://img.shields.io/badge/React-v19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
@@ -14,18 +12,9 @@
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square)](https://github.com/NamaeTachii/akai-game-launcher)
+![Source Only](https://img.shields.io/badge/distribution-source%20only-orange?style=flat-square)
 
 </div>
-
----
-
-## 📸 Screenshots
-
-> ⚠️ Screenshots will be added in a future update.
-
-| Home Dashboard | Game Library | Settings |
-|:-:|:-:|:-:|
-| ![Home](https://via.placeholder.com/380x220/1a1a2e/e94560?text=Home+Dashboard) | ![Library](https://via.placeholder.com/380x220/1a1a2e/e94560?text=Game+Library) | ![Settings](https://via.placeholder.com/380x220/1a1a2e/e94560?text=Settings) |
 
 ---
 
@@ -62,12 +51,15 @@
 
 ## 🚀 Getting Started
 
+> **Note:** No prebuilt binaries are provided. You'll need to clone the repository and build the app yourself from source.
+
 ### Prerequisites
 
 - [Node.js](https://nodejs.org) `>= 18.x`
 - [npm](https://npmjs.com) `>= 9.x`
+- [Git](https://git-scm.com)
 
-### Installation
+### Clone & Install
 
 ```bash
 # Clone the repository
@@ -94,7 +86,7 @@ This launches both the Electron shell and the Vite dev server simultaneously via
 
 ## 📦 Build & Packaging
 
-Build the app for your target platform:
+To produce a distributable binary for your platform, run the appropriate build command:
 
 ```bash
 # Windows (.exe / NSIS installer)
@@ -109,7 +101,7 @@ npm run build:linux
 
 Output files will be placed in the `dist/` directory.
 
-> 💡 **Tip:** Cross-platform builds may require platform-specific toolchains. Refer to the [electron-builder docs](https://www.electron.build/multi-platform-build) for setup guidance.
+> 💡 **Tip:** Cross-platform builds may require platform-specific toolchains. Refer to the [electron-builder docs](https://www.electron.build/multi-platform-build) for setup guidance. Building on the same OS as your target platform is recommended for best results.
 
 ---
 
