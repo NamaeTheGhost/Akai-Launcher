@@ -11,7 +11,7 @@
 [![Vite](https://img.shields.io/badge/Vite-v7-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey?style=flat-square)](https://github.com/NamaeTachii/akai-game-launcher)
+[![Platform](https://img.shields.io/badge/platform-Windows_|_macOS_|_Linux-lightgrey?style=flat-square)](https://github.com/NamaeTachii/akai-game-launcher)
 ![Source Only](https://img.shields.io/badge/distribution-source%20only-orange?style=flat-square)
 
 </div>
